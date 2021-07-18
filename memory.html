@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <body>
+    hello
+  </body>
+
+  <script>
+    
+    // 创建内存
+    var memory = new WebAssembly.Memory({ initial: 10, maximum: 100 });
+    /*
+    console.log(memory);
+    // 内存赋值
+    new Uint32Array(memory.buffer)[0] = 42;
+    console.log(new Uint32Array(memory.buffer)[0]);
+    // 更改内存大小
+    var memory2 = memory.grow(1);
+    console.log(memory === memory2);
+    */
+    var importObject = {
+      js: {
+        mem: memory
+      }
+    };
+
+    fetch('memory.wasm').then(response =>
+      response.arrayBuffer()
+    ).then(bytes =>
+      WebAssembly.instantiate(bytes, importObject)
+    ).then(results => {
+      var i32 = new Uint32Array(memory.buffer);
+      for (var i = 0; i < 10; i++) {
+        i32[i] = i;
+      }
+      var sum = results.instance.exports.accumulate(0, 10);
+      console.log(sum);
+    });
+
+  </script>
+</body>
+
+</html>

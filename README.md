@@ -11,6 +11,7 @@ npx http-server ./  --cors *
 ```
 
 ## open index.html in your browser
+> http://localhost:8080/index.html
 
 
 ## check result
